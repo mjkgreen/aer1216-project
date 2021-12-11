@@ -257,15 +257,15 @@ function Derivatives(block)
 P = block.DialogPrm(1).Data; % must duplicate this line in each function
 
 % compute inertial constants
-K = ;
-k1 = ;
-k2 = ;
-k3 = ;
-k4 = ;
-k5 = ;
-k6 = ;
-k7 = ;
-k8 = ;
+% K = ;
+% k1 = ;
+% k2 = ;
+% k3 = ;
+% k4 = ;
+% k5 = ;
+% k6 = ;
+% k7 = ;
+% k8 = ;
 
 % map states and inputs
 pn    = block.ContStates.Data(1);
@@ -286,15 +286,69 @@ delta_r = block.InputPort(1).Data(3)*pi/180 ; % converted inputs to radians
 delta_t = block.InputPort(1).Data(4);
 
 % Air Data 
-Va = ;
-alpha = ;
-beta = ;
+Va = sqrt(u^2+v^2+w^2);
+alpha = atan(w/u);
+beta = asin(v/Va);
 
 % rotation matrix
-
+c_eb = [cos(theta)*cos(psi), sin(phi)*sin(theta)*cos(psi) - cos(phi) * sin(psi), cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi);...
+        cos(theta)*sin(psi), sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi), cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi);...
+        -sin(theta), sin(phi)*cos(theta), cos(phi)*cos(theta)];
 % Aerodynamic Coefficients 
 % compute the nondimensional aerodynamic coefficients here
+X.u = (P.cxu + 2 * P.cxe) * .5 * rho * U_e * P.s;
+X.w = c_x.alpha * .5 * rho * U_e * P.s;
+X.q = c_x.q * .25 * rho * U_e * P.s * P.c;
+X.u_dot = c_x.u_dot * .25 * rho * P.s* P.c;
+X.w_dot = c_x.alpha_dot * .25 * rho * P.s * P.c;
+X.q_dot = c_x.q_dot * .125 * rho * P.s * P.c^2;
+X.delta_e = c_x.delta_e * .5 * rho * U_e^2 * P.s;
+X.delta_p = c_x.delta_p * .5 * rho * U_e^2 * P.s;
 
+Z.u = (c_z.u + 2 * c_z_e) * .5 * rho * U_e * P.s;
+Z.w = c_z.alpha * .5 * rho * U_e * P.s;
+Z.q = c_z.q * .25 * rho * U_e * P.s * P.c;
+Z.u_dot = c_z.u_dot * .25 * rho * P.s * P.c;
+Z.w_dot = c_z.alpha_dot * .25 * rho * P.s * P.c;
+Z.q_dot = c_z.q_dot * .125 * rho * P.s * P.c^2;
+Z.delta_e = c_z.delta_e * .5 * rho * U_e^2 * P.s;
+Z.delta_p = c_z.delta_p * .5 * rho * U_e^2 * P.s;
+
+M.u = (c_m.u + 2 * c_m_e) * .5 * rho * U_e * P.s * P.c;
+M.w = c_m.alpha * .5 * rho * U_e * P.s * P.c;
+M.q = c_m.q * .25 * rho * U_e * P.s * P.c^2;
+M.u_dot = c_m.u_dot * .25 * rho * P.s * P.c^2;
+M.w_dot = c_m.alpha_dot * .25 * rho * P.s * P.c^2;
+M.q_dot = c_m.q_dot * .125 * rho * P.s * P.c^3;
+M.delta_e = c_m.delta_e * .5 * rho * U_e^2 * P.s * P.c;
+M.delta_p = c_m.delta_p * .5 * rho * U_e^2 * P.s * P.c;
+
+Y.v = c_y.beta * .5 * rho * U_0 * P.s;
+Y.p = c_y.p * .25 * rho * U_0 * P.s * b;
+Y.r = c_y.r * .25 * rho * U_0 * P.s * b;
+Y.v_dot = c_y.beta_dot * .25 * rho * P.s * b;
+Y.p_dot = c_y.p_dot * .125 * rho * P.s * b^2;
+Y.r_dot = c_y.r_dot * .125 * rho * P.s * b^2;
+Y.delta_a = c_y.delta_a * .5 * rho * U_e^2 * P.s;
+Y.delta_r = c_y.delta_r * .5 * rho * U_e^2 * P.s;
+
+L.v = c_l.beta * .5 * rho * U_0 * P.s * b;
+L.p = c_l.p * .25 * rho * U_0 * P.s * b^2;
+L.r = c_l.r * .25 * rho * U_0 * P.s * b^2;
+L.v_dot = c_l.beta_dot * .25 * rho * P.s * b^2;
+L.p_dot = c_l.p_dot * .125 * P.s * b^3;
+L.r_dot = c_l.r_dot * .125 * rho * P.s * b^3;
+L.delta_a = c_l.delta_a * .5 * rho * U_e^2 * P.s * b;
+L.delta_r = c_l.delta_r * .5 * rho * U_e^2 * P.s * b;
+
+N.v = c_n.beta * .5 * rho * U_0 * P.s * b;
+N.p = c_n.p * .25 * rho * U_0 * P.s * b^2;
+N.r = c_n.r * .25 * rho * U_0 * P.s * b^2;
+N.v_dot = c_n.beta_dot * .25 * rho * P.s * b^2;
+N.p_dot = c_n.p_dot * .125 * rho * P.s * b^3;
+N.r_dot = c_n.r_dot * .125 * rho * P.s * b^3;
+N.delta_a = c_n.delta_a * .5 * rho * U_e^2 * P.s * b;
+N.delta_r = c_n.delta_r * .5 * rho * U_e^2 * P.s * b;
 % aerodynamic forces and moments
 % compute the aerodynamic forces and moments here
 
@@ -308,22 +362,23 @@ beta = ;
 
 % state derivatives
 % the full aircraft dynamics model is computed here
-pdot = ;
-pndot = ;
-pedot = ;
-pddot = ;
+pdot = [0 0 0];
+pndot = pdot(1);
+pedot = pdot(2);
+pddot = pdot(3);
 
-udot = ;
-vdot = ;
-wdot = ;
+udot = X/P.m + r*v - q*w;
+vdot = Y/P.m + p*w - r*u;
+wdot = Z/P.m + q*u - p*v;
 
-phidot = ;
-thetadot = ;
-psidot = ;
+phidot = 0;
+thetadot = 0;
+psidot = 0;
 
-pdot = ;
-qdot = ;
-rdot = ;
+omegadot = inv(P.i)*([L;M;N] - cross([p;q;r],P.i) * [p;q;r]);
+pdot = omegadot(1);
+qdot = omegadot(2);
+rdot = omegadot(3);
 
 % map derivatives
 block.Derivatives.Data(1) = pndot;
