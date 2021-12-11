@@ -41,6 +41,38 @@ P.g = 9.81;
 % physical parameters of airframe
 
 % aerodynamic coefficients
+P.cl0 = 0.28;
+P.cd0 = 0.03;
+P.cm0 = -0.02338;
+P.clalpha = 3.45;
+P.cdalpha = 0.30;
+P.cmalpha = -0.38;
+P.clq = 0;
+P.cdq = 0;
+P.cmq = -3.6;
+P.cldeltae = -0.36;
+P.ddeltae = 0;
+P.cmdeltae = -0.5;
+P.epsilon = 0.1592;
+
+P.cy0 = 0;
+P.cl0 = 0;
+P.cn0 = 0;
+P.cybeta = -0.98;
+P.clbeta = -0.12;
+P.cnbeta = 0.25;
+P.cyp = 0;
+P.clp = -0.26;
+P.cnp = 0.022;
+P.cyr = 0;
+P.clr = 0.14;
+P.cnr = -0.35;
+P.cydeltaa = 0;
+P.cldeltaa = 0.08;
+P.cndeltaa = 0.06;
+P.cydeltar = -0.17;
+P.cldeltar = 0.105;
+P.cndeltar = -0.032;
 
 % Control Input limits 
 P.delta_e_max = deg2rad(45); % assumed symmetric
