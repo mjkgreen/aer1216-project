@@ -39,6 +39,17 @@ P.g = 9.81;
 
 % Aerosonde UAV Data
 % physical parameters of airframe
+P.m = 13.5;
+P.ixx = 0.8244;
+P.iyy = 1.135;
+P.izz = 1.759;
+P.ixz = 0.1204;
+P.i = [P.ixx 0 P.ixz;
+        0 P.iyy 0;
+        P.ixz 0 P.izz];
+
+P.s = 0.55;
+P.c = 0.18994;
 
 % aerodynamic coefficients
 P.cl0 = 0.28;
